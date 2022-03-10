@@ -3,12 +3,11 @@
         <button mat-icon-button class="example-icon toolbar-color" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <mat-icon>menu</mat-icon>
           </button>
-      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        <a class="dropdown-item" href="#">Action</a>
-        <a class="dropdown-item" href="#">Another action</a>
-        <a class="dropdown-item" href="#">Something else here</a>
-      </div>
-      <span class="toolbar-color">Config Editor</span>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" routerLink="/login" routerLinkActive="active">Login Page</a>
+            <a class="dropdown-item" routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+        </div>
+        <span class="toolbar-color">Config Editor</span>
     </mat-toolbar-row>
 </mat-toolbar>
 
