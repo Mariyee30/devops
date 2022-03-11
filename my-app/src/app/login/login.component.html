@@ -4,10 +4,11 @@
             <mat-icon>menu</mat-icon>
           </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" routerLink="/login" routerLinkActive="active">Login Page</a>
+            <a class="dropdown-item" routerLink="/login" routerLinkActive="active">Login</a>
             <a class="dropdown-item" routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+            <a class="dropdown-item" routerLink="/config" routerLinkActive="active">Config Editor Tool</a>
         </div>
-        <span class="toolbar-color">Config Editor</span>
+        <span class="toolbar-color">Login</span>
     </mat-toolbar-row>
 </mat-toolbar>
 
@@ -37,13 +38,13 @@
                             <h2 class="text-secondary display-4">Sign In</h2>
                             <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
                                 <div class="form-group mb-3">
-                                    <input id="inputusername" type="username" formControlName="username"  [ngClass]="{ 'is-invalid': submitted && f.username.errors }" placeholder="Username" required="" autofocus="" class="form-control border-0 shadow-sm px-4">
+                                    <input id="inputusername" type="username" formControlName="username"  [ngClass]="{ 'is-invalid': submitted && f.username.errors }" placeholder="Username" required="" autofocus="" class="form-control border-1 shadow-sm px-4">
                                     <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
                                         <div *ngIf="f.username.errors.required">Username is required.</div>
                                      </div>
                                 </div>
                                 <div class="form-group mb-3">
-                                    <input id="inputpassword" type="password" formControlName="password" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" placeholder="Password" required="" class="form-control border-0 shadow-sm px-4">
+                                    <input id="inputpassword" type="password" formControlName="password" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" placeholder="Password" required="" class="form-control border-1 shadow-sm px-4">
                                     <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
                                         <div *ngIf="f.password.errors.required">Password is required</div>
                                      </div>
