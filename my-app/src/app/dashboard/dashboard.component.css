@@ -1,0 +1,95 @@
+
+.center-block {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.grey {
+    background-color: #f3f5f5;
+    height: 95vh;
+    overflow: scroll;
+    overflow-x: hidden;
+}
+::-webkit-scrollbar {
+    width: 2;  /* Remove scrollbar space */
+    background: transparent;  /* Optional: just make scrollbar invisible */
+}
+/* Optional: show position indicator in red */
+::-webkit-scrollbar-thumb {
+    background: #b6b6b6;
+}
+
+.toolbar-color {
+    color:rgb(240, 240, 240);
+}
+
+.btn-green {
+    color: white;
+    background-color: #0da682;
+}
+
+.btn-green-outline {
+    border-color: #0da682;
+    border: 2px solid #0da682;;
+    color: #0da682;
+}
+
+.search {
+    background-color: white;
+    border: none;
+    padding: 10px;
+    margin-top: 2px;
+    width: 12%;
+    font-style: normal;
+}
+
+.float-right {
+    float: right;
+}
+
+.font-fix {
+    font-family: FontAwesome, Roboto;
+}
+
+.card {
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 18px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 14vw;
+    height: 18vh;
+}
+
+.card-text { 
+    font-size: 14px;
+    overflow-y: scroll;
+}
+
+.card h3 {
+    font-weight: 450;
+}
+
+.card-dropdown {
+    float: right;
+    transform: scale(.8);
+    left: 18px;
+    bottom: 10px;
+    color: grey;
+}
+
+.card-date {
+    position: absolute;
+    bottom: 0;
+    margin-bottom: 6px;
+    color: grey;
+}
+
+.border-check {
+   background-color: black;
+}
+
+.file-input {
+    display: none;
+}
