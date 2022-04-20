@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'config',
@@ -8,48 +8,59 @@ import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
 })
 
 export class ConfigComponent implements OnInit {
+  
+  configForm : FormGroup;
 
-  ngOnInit(): void {
+  constructor(private fb : FormBuilder) { }
+
+  ngOnInit() : void {
+    this.configForm = this.fb.group({
+      server: ['', Validators.required],
+      organization: ['', Validators.required],
+      pat_username: ['', Validators.required],
+      products: this.fb.array([])
+    });
   }
 
-  contact = {
-    firstName: 'Harry',
-    lastName: 'Potter',
-    contacts: [{ phoneNo: '555-55-555', emailAddr: 'harry@potter.com' }]
+  addProduct() {
+    const product = this.fb.group({
+      svg_product_name: ['', Validators.required],
+      headers: this.fb.array([]),
+      numDays: ['', Validators.required],
+      projects: this.fb.array([])
+    });
+
+    (this.configForm.get('products') as FormArray).push(product);
+  }
+   
+  removeProduct(i : number) {
+    (this.configForm.get('products') as FormArray).removeAt(i);
   }
 
-  form: FormGroup = this.formBuilder.group({
-    firstName: this.contact.firstName,
-    lastName: this.contact.lastName,
-    contacts: this.buildContacts(this.contact.contacts)
-  });
+  addHeader(headersFormArray : FormArray) {
+    const header = this.fb.control('');
 
-  constructor(private formBuilder: FormBuilder) {}
-
-  get contacts(): FormArray {
-    return this.form.get('contacts') as FormArray;
+    headersFormArray.push(header);
   }
 
-  buildContacts(contacts: {phoneNo: string; emailAddr: string;}[] = []) {
-    return this.formBuilder.array(contacts.map(contact => this.formBuilder.group(contact)));
+  removeHeader(headersFormArray : FormArray, i : number) {
+    headersFormArray.removeAt(i);
   }
 
-  addContactField() {
-    this.contacts.push(this.formBuilder.group({phoneNo: null, emailAddr: null}))
+  addProject(projectsFormArray : FormArray) {
+    const project = this.fb.group({
+      project_name: '',
+      pipelines: this.fb.array([])
+    })
+
+    projectsFormArray.push(project);
+  }
+  
+  removeProject(projectsFormArray : FormArray, i : number) {
+    projectsFormArray.removeAt(i);
   }
 
-  removeContactField(index: number): void {
-    if (this.contacts.length > 1) this.contacts.removeAt(index);
-    else this.contacts.patchValue([{phoneNo: null, emailAddr: null}]);
-  }
-
-  submit(value: any): void {
-    console.log(value)
-  }
-
-  reset(): void {
-    this.form.reset();
-    this.contacts.clear();
-    this.addContactField();
+  onSubmit() {
+    console.log(this.configForm.value);
   }
 }

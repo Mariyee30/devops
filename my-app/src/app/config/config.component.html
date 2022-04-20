@@ -15,77 +15,82 @@
 <div class="grey">
     <div class="mt-5 mx-5">
         <!-- Configuration Editor -->
-        <div class="d-flex align-items-start">
-            <div class="nav flex-column nav-pills me-3 light-border" id="tab" role="tablist" aria-orientation="vertical">
-                <button class="nav-link" id="server-tab" data-bs-toggle="pill" data-bs-target="#server" type="button" role="tab" aria-controls="server" aria-selected="true">Server Information</button>
-                <button class="nav-link active" id="products-tab" data-bs-toggle="pill" data-bs-target="#products" type="button" role="tab" aria-controls="products" aria-selected="false">Products</button>
-            </div>
-            <div class="tab-content" id="v-pills-tabContent">
-                <div class="tab-pane fade" id="server" role="tabpanel" aria-labelledby="server-tab">
-                    <form>
-                        <div class="form-group">
-                            <label for="server-name">Server Name</label>
-                            <input type="text" class="form-control" id="server-name" area-describedy="server-name-help" placeholder="azure">
-                            <small id="server-name-help" class="form-text text-muted">The name of the server used.</small>
-                        </div>
-                        <div class="form-group">
-                            <label for="org-name">Organization Name</label>
-                            <input type="text" class="form-control" id="org-name" area-describedy="org-name-help" placeholder="huntermob">
-                            <small id="org-name-help" class="form-text text-muted">The name of the organization.</small>
-                        </div>
-                        <div class="form-group">
-                            <label for="pat-name">PAT Username</label>
-                            <input type="text" class="form-control" id="pat-name" area-describedy="pat-name-help" placeholder="devopsMetrics">
-                            <small id="pat-name-help" class="form-text text-muted">The name of the PAT .</small>
-                        </div>
-                    </form>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <form [formGroup]="configForm" (ngSubmit)="onSubmit()">
+                        <p>
+                            <label fr="server">Server:</label>
+                            <input type="text" id="server" name="server" formControlName="server" class="form-control" placeholder="azure">
+                        </p>
+                        <p>
+                            <label for="organization">Organization:</label>
+                            <input type="text" id="organization" name="organization" formControlName="organization" class="form-control" placeholder="huntermob">
+                        </p>
+                        <p>
+                            <label for="pat_username">PAT Username:</label>
+                            <input type="text" id="pat_username" name="pat_username" formControlName="pat_username" class="form-control" placeholder="devopsMetrics">
+                        </p>
+                        <table class="table table-bordered" formArrayName="products">
+                            <tr>
+                                <th colspan="2">Products:</th>
+                                <th width="100px"><button type="button" (click)="addProduct()" class="btn btn-primary">Add Product</button></th>
+                            </tr>
+                            <tr *ngFor="let product of configForm.get('products')['controls']; let i = index" [formGroupName]="i">
+                                <td>
+                                    SVG Product Name:
+                                    <input type="text" formControlName="svg_product_name" class="form-control">
+                                </td>
+                                <td>
+                                    <table class="table table-bordered" formArrayName="headers">
+                                        <tr>
+                                            <th colspan="2">Headers:</th>
+                                            <th width="100px"><button type="button" (click)="addHeader(product.get('headers'))" class="btn btn-primary">Add Header</button></th>
+                                        </tr>
+                                        <tr *ngFor="let header of product.get('headers')['controls']; let j = index" [formGroupName]="j">
+                                            <td>
+                                                <input type="text" id="header-{{j}}" class="form-control" [formControlName]="j">
+                                            </td>
+                                            <td>
+                                                <button (click)="removeHeader(product.get('headers'), j)" class="btn btn-danger">Remove</button>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td>
+                                    Number of Days:
+                                    <input type="text" formControlName="numDays" class="form-control">
+                                </td>
+                                <td>
+                                    <table class="table table-bordered" formArrayName="projects">
+                                        <tr>
+                                            <th colspan="2">Projects:</th>
+                                            <th width="100px"><button type="button" (click)="addProject(product.get('projects'))" class="btn btn-primary">Add Projects</button></th>
+                                        </tr>
+                                        <tr *ngFor="let project of product.get('projects')['controls']; let k = index" [formGroupName]="k">
+                                            <td>
+                                                <input type="text" formControlName="project_name" class="form-control">
+                                            </td>
+                                            <td>
+                                                <button (click)="removeHeader(product.get('projects'), k)" class="btn btn-danger">Remove</button>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td>
+                                <td>
+                                    <button (click)="removeProduct(i)" class="btn btn-danger">Remove</button>
+                                </td>
+                            </tr>
+                        </table>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form> 
                 </div>
-                <div class="tab-pane fade show active" id="products" role="tabpanel" aria-labelledby="products-tab">
-                    <form>
-                        <div class="form-group">
-                            <label for="svg-name">SVG Product Name</label>
-                            <input type="text" class="form-control" id="svg-name" area-describedy="svg-name-help" placeholder="product name">
-                            <small id="svg-name-help" class="form-text text-muted">The name of the product.</small>
-                        </div>
-                    </form>
+                <div class="col-md-6">
+                    <div class="json-results">
+                        <pre>{{this.configForm.value | json}}</pre>
+                    </div>
                 </div>
-
-                <form [formGroup]="form" (submit)="submit(form.value)">
-                    <fieldset>
-                      <legend>Personal Data:</legend>
-                  
-                      <label for="first-name">First Name:</label>
-                      <input type="text" id="first-name" name="first-name" placeholder="(required)" formControlName="firstName">
-                      <br><br>
-                  
-                      <label for="last-name">Last Name:</label>
-                      <input type="text" id="last-name" name="last-name" placeholder="(optional)" formControlName="lastName">
-                      <br><br>
-                    </fieldset>
-                  
-                    <fieldset>
-                      <legend>Contacts:</legend>
-                      <ng-container formArrayName="contacts" *ngFor="let contact of contacts.controls; index as i">
-                        <ng-container [formGroupName]="i">
-                          <label for="phone">PhoneNo:</label>
-                          <input type="tel" id="phone" name="phone" placeholder="XXX-XX-XXX" pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}" formControlName="phoneNo">
-                  
-                          <label for="email">Email:</label>
-                          <input type="email" id="email" name="email" placeholder="address@domain.com" formControlName="emailAddr">
-                  
-                          <button class="btn-remove" type="button" (click)="removeContactField(i)">x</button>
-                  
-                          <br><br>
-                        </ng-container>
-                      </ng-container>
-                  
-                      <button class="btn-add" type="button" (click)="addContactField()">Add</button>
-                    </fieldset>
-                  
-                    <button class="btn-submit" type="submit">Submit</button>
-                    <button class="btn-reset" type="button" (click)="reset()">Reset</button>
-                </form>
-                  
             </div>
         </div>
     </div>
