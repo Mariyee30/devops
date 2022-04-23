@@ -28,6 +28,7 @@
     "font-awesome": "^4.7.0",
     "fontawesome-free": "^1.0.4",
     "jquery": "^3.6.0",
+    "lodash": "^4.17.21",
     "ng2-file-upload": "^1.4.0",
     "ngx-cumulio": "^1.4.21",
     "popper.js": "^1.16.1",
