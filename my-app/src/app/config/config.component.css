@@ -5,11 +5,8 @@
     margin-right: auto;
 }
 
-.grey {
-    background-color: #f3f5f5;
-    height: 95vh;
-    overflow: scroll;
-    overflow-x: hidden;
+body {
+    background: #f3f5f5;
 }
 ::-webkit-scrollbar {
     width: 2;  /* Remove scrollbar space */
@@ -35,43 +32,15 @@
     color: #0da682;
 }
 
-.search {
-    background-color: white;
-    border: none;
-    padding: 10px;
-    margin-top: 2px;
-    width: 12%;
-    font-style: normal;
-}
-
-.float-right {
-    float: right;
-}
-
-.font-fix {
-    font-family: FontAwesome, Roboto;
-}
-
-.card-date {
-    position: flex;
-    bottom: 0;
-    color: grey;
+.json-results {
+    border: 2px solid black;
+    padding: 2px;
 }
 
 .light-border {
-    border: 1px solid rgb(0, 0, 0);
-    border-radius: 3px;
+    border: 1px solid grey;
     padding: 4px;
-}
-
-.file-input {
-    display: none;
-}
-
-.config-title {
-    border: 2px solid black;
-}
-
-.json-results {
-    border: 2px solid black;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }

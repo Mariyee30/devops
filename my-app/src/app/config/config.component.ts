@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, FormArray, FormControl, Validators, AbstractControl } from '@angular/forms';
 
 @Component({
   selector: 'config',
@@ -9,10 +9,83 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, FormArray, Fo
 
 export class ConfigComponent implements OnInit {
 
+  ngOnInit() : void {}
+
+  form : FormGroup;
+  form2 : FormGroup;
+
+  constructor(private fb : FormBuilder){
+    this.form = this.fb.group({
+      user: '',
+      directory: '',
+      filename: new FormArray([new FormControl('test')])
+    });
+
+    this.form2 = this.fb.group({
+      products: this.fb.array([])
+    });
+  }
+
+  products = this.fb.group({
+    headers: this.fb.array([new FormControl('test')]),
+  })
+
+  get productsForm() : FormArray {
+    return this.form2.get('products') as FormArray;
+  }
+
+  setProducts() {
+    this.data.products.forEach(x => {
+      this.productsForm.push(
+        this.fb.group({
+          headers: this.fb.array([new FormControl('test')]),
+        })
+      );
+    })
+  }
+
+  addProduct() {
+    this.productsForm.push(
+      this.fb.group({
+        headers: this.fb.array([new FormControl('test')]),
+      })
+    );
+  }
+
+  deleteProduct(index) {
+    this.productsForm.removeAt(index);
+  }
+
+  addHeader(control){
+    const form2 = new FormControl('');
+    control.push(
+      (<FormArray>this.form2.controls['headers']).push(form2)
+    )
+  }
+  addNewHeader(control) {
+    control.push(
+      this.fb.control('')
+    )
+  }
+
+  deleteHeader(control, index) {
+    control.removeAt(index);
+  }
+
+  addFormInput(){
+    const form=new FormControl('');
+    (<FormArray>this.form.controls['filename']).push(form);
+  }
+
+  removeFormInput(i){
+    (<FormArray>this.form.get('filename')).removeAt(i);
+  }
+  
+
   data = {
-    server: 'azure',
-    organization: 'organization',
-    pat_username: 'devopsMetrics',
+    server: '',
+    organization: '',
+    pat_username: '',
     products: [
       {
         svg_product_name: '',
@@ -20,9 +93,48 @@ export class ConfigComponent implements OnInit {
           ""
         ],
         numDays: '',
+      }
+    ]
+  }
+
+  /*
+  ngOnInit() : void {}
+
+  configForm : FormGroup;
+
+  constructor(private fb : FormBuilder) {
+    this.configForm = this.fb.group({
+      server: ['', Validators.required],
+      organization: ['', Validators.required],
+      pat_username: ['', Validators.required],
+      products: this.fb.array([])
+    })
+  }
+
+  products = this.fb.group({
+    svg_product_name: [''],
+    headers: this.fb.array([]),
+    numDays: [''],
+    projects: this.fb.array([])
+  })
+
+  data = {
+    server: 'azure',
+    organization: 'organization',
+    pat_username: 'devopsMetrics',
+    //
+    products: [
+      {
+        svg_product_name: '',
+        headers: [
+          ""
+        ],
+        numDays: '',
+        //
         projects: [
           {
             project_name: '',
+            //
             pipelines: {
               build: [
                 {
@@ -57,22 +169,6 @@ export class ConfigComponent implements OnInit {
       }
     ]
   }
-
-  configForm : FormGroup;
-  headersArray : FormArray;
-
-  constructor(private fb : FormBuilder) {
-    this.configForm = this.fb.group({
-      server: ['', Validators.required],
-      organization: ['', Validators.required],
-      pat_username: ['', Validators.required],
-      products: this.fb.array([])
-    })
-
-    this.setProducts();
-  }
-
-  ngOnInit() : void {}
 
   get productsFormArray() : FormArray {
     return this.configForm.get('products') as FormArray;
@@ -145,7 +241,7 @@ export class ConfigComponent implements OnInit {
     control.push(
       this.fb.group({
         project_name: [''],
-        pipelines: this.fb.array([])
+        pipelines: this.fb.array([]),
       })
     )
   }
@@ -155,21 +251,15 @@ export class ConfigComponent implements OnInit {
   }
 
   setPipelines(x) {
-    let arr = new FormArray([]);
     x.projects.forEach(y => {
-      arr.push(
-        this.fb.group({
-          pipeline: y.pipeline
-        })
-      );
+      build: y.build;
     })
-    return arr;
   }
 
   addNewPipeline(control) {
     control.push(
       this.fb.group({
-        pipeline: ['']
+        build: ['']
       })
     )
   }
@@ -181,5 +271,5 @@ export class ConfigComponent implements OnInit {
   onSubmit() {
     console.log(this.configForm.value);
   }
-
+*/
 }

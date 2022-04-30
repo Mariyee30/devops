@@ -1,23 +1,187 @@
-<mat-toolbar style="background-color:#051b2d;">
-    <mat-toolbar-row>
-        <button mat-icon-button class="example-icon toolbar-color" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <mat-icon>menu</mat-icon>
-          </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" routerLink="/login" routerLinkActive="active">Login</a>
-            <a class="dropdown-item" routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
-            <a class="dropdown-item" routerLink="/config" routerLinkActive="active">Config Editor Tool</a>
-        </div>
-        <span class="toolbar-color">Config Editor Tool</span>
-    </mat-toolbar-row>
-</mat-toolbar>
+<body>
+    <mat-toolbar style="background-color:#051b2d;">
+        <mat-toolbar-row>
+            <button mat-icon-button class="example-icon toolbar-color" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <mat-icon>menu</mat-icon>
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" routerLink="/login" routerLinkActive="active">Login</a>
+                <a class="dropdown-item" routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+                <a class="dropdown-item" routerLink="/config" routerLinkActive="active">Config Editor Tool</a>
+            </div>
+            <span class="toolbar-color">Config Editor Tool</span>
+        </mat-toolbar-row>
+    </mat-toolbar>
 
-<div class="grey">
+    <div class="container mt-3">
+        <!-- Editor -->
+        <form [formGroup]="form">
+            <div formArrayName="filename">
+              <div class="form-group" *ngFor="let f of form.get('filename')['controls']; let i = index">
+                <label for="filename">Input</label>
+                <input type="text" class="form-control" [formControlName]="i" placeholder="Input">
+          
+                <button type="submit" (click)="addFormInput()" class="btn btn-danger">
+                  AddInput
+                </button>
+          
+                <button type="submit" (click)="removeFormInput(i)" class="btn btn-danger">
+                  RemoveInput
+                </button>
+              </div>
+            </div>
+        </form>
+
+        <form [formGroup]="form2">
+            <button class="btn btn-green" (click)="addProduct()">Add Product</button>
+            <div class="form-group" *ngFor="let product of form2.get('products')['controls']; let i = index">
+                <div class="form-group" *ngFor="let header of product.get('headers')['controls']; let j = index">
+                    <button type="submit" (click)="addHeader(product.get('headers'), j)" class="btn btn-green">Add Header</button>
+                    <input type="text" class="form-control" [formControlName]="j" placeholder="Input">
+                    <button type="submit" (click)="deleteHeader(product.get('headers'), j)" class="btn btn-danger">Remove Header</button>
+                </div>
+                <button class="btn btn-danger" (click)="deleteProduct(i)">Delete Product</button>
+            </div>
+        </form>
+
+        <!--<form [formGroup]="form">
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="server">Server:</label>
+                    <input type="text" class="form-control" formControlName="server"  placeholder="azure">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="organization">Organization:</label>
+                    <input type="text" class="form-control" formControlName="organization"  placeholder="huntermob">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="pat_username">PAT Username:</label>
+                    <input type="text" class="form-control" formControlName="pat_username"  placeholder="devopsMetrics">
+                </div>
+            </div>
+
+            <button class="btn btn-green" (click)="addProduct()">Add Product</button>
+            <div formArrayName="products">
+                <div *ngFor="let product of productsForm.controls; let i = index">
+                    <h2 class="mt-2">Product {{i + 1}}</h2>
+                    <div class="form-row" [formGroupName]="i">
+                        <div class="form-group col-md-3">
+                            <label>SVG Product Name:</label>
+                            <input class="form-control" formControlName="svg_product_name">
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label>Number of Days Displayed</label>
+                            <input class="form-control" formControlName="numDays">
+                        </div>
+
+                        <div formArrayName="headers">
+                            <div *ngFor="let header of product.get('headers').controls; let j = index">
+                                <div>
+                                    <label>Header Name:</label>
+                                    <input class="form-control" formControlName="j"/><button class="btn btn-danger" (click)="deleteHeader(product.get('headers'), j)">Delete Header</button>
+                                </div>
+                            </div>
+                            <button class="btn btn-green" (click)="addHeader(product.get('headers'))">Add Header</button>
+                        </div>
+                    </div>
+                    <button class="btn btn-danger mt-2"(click)="deleteProduct(i)">Delete Product</button>
+                </div>
+            </div>
+        </form>
+-->
+        <div class="json-results mt-3">
+            <pre>{{this.form.value | json}}</pre>
+            <pre>{{this.form2.value | json}}</pre>
+        </div>
+    </div>
+</body>
+
+
+<!--
     <div class="mt-5 mx-5">
-        <!-- Configuration Editor -->
+        <!-- Configuration Editor
         <div class="container">
-            <div class="row">
-                <form [formGroup]="configForm" (ngSubmit)="onSubmit()">
+            <form [formGroup]="configForm" (ngSubmit)="onSubmit()">
+                <div>
+                    <label fr="server">Server:</label>
+                    <input type="text" id="server" name="server" formControlName="server" class="form-control" placeholder="azure">
+                </div>
+                <div>
+                    <label for="organization">Organization:</label>
+                    <input type="text" id="organization" name="organization" formControlName="organization" class="form-control" placeholder="huntermob">
+                </div>
+                <div>
+                    <label for="pat_username">PAT Username:</label>
+                    <input type="text" id="pat_username" name="pat_username" formControlName="pat_username" class="form-control" placeholder="devopsMetrics">
+                </div>
+                
+                <button (click)="addNewProduct()">Add New Product</button><br><br>
+                <div formArrayName="products">
+                    <div *ngFor="let product of productsFormArray.controls; let i = index">
+                        <fieldset>
+                            <legend><h3>Product {{i + 1}}</h3></legend>
+                            <div [formGroupName]="i">
+                                <label>SVG Product Name:</label>
+                                <input formControlName="svg_product_name"/><span><button (click)="deleteProduct(i)">Delete Product</button></span>
+
+                                <div formArrayName="headers">
+                                    <div *ngFor="let header of product.get('headers')['controls']; let j = index">
+                                        <fieldset>
+                                            <legend><h3>Header {{j + 1}}</h3></legend>
+                                            <div [formGroupName]="j">
+                                                <label>Header Name:</label>
+                                                <input formControlName="header"/><span><button (click)="deleteHeader(product.get('headers'), j)">Delete Header</button></span>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                    <button (click)="addNewHeader(product.get('headers'))">Add New Header</button>
+                                </div>
+
+                                <label>Num of Days</label>
+                                <input formControlName="numDays"/>
+
+                                <div formArrayName="projects">
+                                    <div *ngFor="let project of product.get('projects')['controls']; let j = index">
+                                        <fieldset>
+                                            <legend><h3>Project {{j + 1}}</h3></legend>
+                                            <div [formGroupName]="j">
+                                                <label>Project Name:</label>
+                                                <input formControlName="project_name"/><span><button (click)="deleteProject(product.get('projects'), j)">Delete Project</button></span>
+                                            </div>
+
+                                            <div formArrayName="pipelines">
+                                                <div *ngFor="let pipeline of project.get('pipelines')['controls']; let k = index">
+                                                    <fieldset>
+                                                        <legend><h3>Pipeline {{k + 1}}</h3></legend>
+                                                        <div [formGroupName]="k">
+                                                            <label>Pipeline Name:</label>
+                                                            <input formControlName="pipeline"/><span><button (click)="deletePipeline(project.get('pipelines'), k)">Delete Pipeline</button></span>
+                                                        </div>
+                                                    </fieldset>
+                                                </div>
+                                                <button (click)="addNewPipeline(project.get('pipelines'))">Add New Pipeline</button>
+                                            </div>
+                                            
+                                        </fieldset>
+                                    </div>
+                                    <button (click)="addNewProject(product.get('projects'))">Add New Project</button>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </form>
+            <div class="col">
+                <div class="mt-3">
+                    <div class="json-results">
+                        <pre>{{this.configForm.value | json}}</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    <form [formGroup]="configForm" (ngSubmit)="onSubmit()">
                     <div>
                         <label fr="server">Server:</label>
                         <input type="text" id="server" name="server" formControlName="server" class="form-control" placeholder="azure">
@@ -65,7 +229,7 @@
                                                     <input formControlName="project_name"/><span><button (click)="deleteProject(product.get('projects'), j)">Delete Project</button></span>
                                                 </div>
 
-                                                <!--<div formArrayName="pipelines">
+                                                <div formArrayName="pipelines">
                                                     <div *ngFor="let pipeline of project.get('pipelines')['controls']; let k = index">
                                                         <fieldset>
                                                             <legend><h3>Pipeline {{k + 1}}</h3></legend>
@@ -76,7 +240,8 @@
                                                         </fieldset>
                                                     </div>
                                                     <button (click)="addNewPipeline(project.get('pipelines'))">Add New Pipeline</button>
-                                                </div>-->
+                                                </div>
+                                                
                                             </fieldset>
                                         </div>
                                         <button (click)="addNewProject(product.get('projects'))">Add New Project</button>
@@ -86,11 +251,9 @@
                         </div>
                     </div>
                 </form>
-
-                
-
-
-                <!--<form [formGroup]="configForm" (ngSubmit)="onSubmit()">
+                    
+                    
+                    <form [formGroup]="configForm" (ngSubmit)="onSubmit()">
                     <div>
                         <label fr="server">Server:</label>
                         <input type="text" id="server" name="server" formControlName="server" class="form-control" placeholder="azure">
@@ -157,12 +320,76 @@
                         </tr>
                     </table>
                 </form>-->
-                <div class="mt-3">
-                    <div class="json-results">
-                        <pre>{{this.configForm.value | json}}</pre>
+
+                <!--<div class="container">
+                    <div class="row">
+                        <div class="col">
+                            <div class="form" [formGroup]="form">
+                                <h3>Server Information</h3>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Server Name</mat-label>
+                                    <input matInput formControlName="server" placeholder="azure">
+                                </mat-form-field>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Organization</mat-label>
+                                    <input matInput formControlName="organization" placeholder="huntermob">
+                                </mat-form-field>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>PAT Username</mat-label>
+                                    <input matInput formControlName="pat_username" placeholder="devopsMetrics">
+                                </mat-form-field>
+        
+                                <h3>Products</h3>
+                                <ng-container formArrayName="products">
+                                    <ng-container *ngFor="let productForm of products.controls; let i = index">
+                                        <h4>Product {{i + 1}}</h4>
+                                        <div class="form-row" [formGroup]="productForm">
+                                            <div class="light-border">
+                                                <mat-form-field appearance="outline">
+                                                    <mat-label>SVG Product Name</mat-label>
+                                                    <input matInput formControlName="svg_product_name">
+                                                </mat-form-field>
+                                                <ng-container formArrayName="headers">
+                                                    <ng-container *ngFor="let headerForm of products.controls; let j = index">
+                                                        <h4>Headers</h4>
+                                                        <div class="form-row" [formGroup]="headerForm">
+                                                            <div class="light-border">
+                                                                <mat-form-field appearance="outline">
+                                                                    <mat-label>Header</mat-label>
+                                                                    <input matInput formControlName="header">
+                                                                </mat-form-field>
+                                                            </div>
+                                                            <button class="btn btn-danger delete-btn" (click)="deleteHeader(j)">
+                                                                <mat-icon>delete_forever</mat-icon>
+                                                            </button>
+                                                        </div>
+                                                    </ng-container>
+                                                </ng-container>
+                                                <mat-form-field appearance="outline">
+                                                    <mat-label>Number of Days</mat-label>
+                                                    <input matInput formControlName="numDays">
+                                                </mat-form-field>
+                                                <mat-form-field appearance="outline">
+                                                    <mat-label>Projects</mat-label>
+                                                    <input matInput formControlName="projects">
+                                                </mat-form-field>
+                                            </div>
+                                            <button class="btn btn-danger delete-btn" (click)="deleteProduct(i)">
+                                                <mat-icon>delete_forever</mat-icon>
+                                            </button>
+                                        </div>
+                                    </ng-container>
+                                </ng-container>
+                            
+                                <button class="btn btn-primary" (click)="addProduct()">Add Product</button>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="mt-3">
+                                <div class="json-results">
+                                    <pre>{{this.form.value | json}}</pre>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+                </div>-->
