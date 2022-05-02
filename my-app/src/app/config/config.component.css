@@ -1,10 +1,3 @@
-
-.center-block {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-}
-
 body {
     background: #f3f5f5;
 }
@@ -35,12 +28,4 @@ body {
 .json-results {
     border: 2px solid black;
     padding: 2px;
-}
-
-.light-border {
-    border: 1px solid grey;
-    padding: 4px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
 }

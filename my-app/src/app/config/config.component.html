@@ -15,36 +15,8 @@
 
     <div class="container mt-3">
         <!-- Editor -->
+        <!-- Server Info -->
         <form [formGroup]="form">
-            <div formArrayName="filename">
-              <div class="form-group" *ngFor="let f of form.get('filename')['controls']; let i = index">
-                <label for="filename">Input</label>
-                <input type="text" class="form-control" [formControlName]="i" placeholder="Input">
-          
-                <button type="submit" (click)="addFormInput()" class="btn btn-danger">
-                  AddInput
-                </button>
-          
-                <button type="submit" (click)="removeFormInput(i)" class="btn btn-danger">
-                  RemoveInput
-                </button>
-              </div>
-            </div>
-        </form>
-
-        <form [formGroup]="form2">
-            <button class="btn btn-green" (click)="addProduct()">Add Product</button>
-            <div class="form-group" *ngFor="let product of form2.get('products')['controls']; let i = index">
-                <div class="form-group" *ngFor="let header of product.get('headers')['controls']; let j = index">
-                    <button type="submit" (click)="addHeader(product.get('headers'), j)" class="btn btn-green">Add Header</button>
-                    <input type="text" class="form-control" [formControlName]="j" placeholder="Input">
-                    <button type="submit" (click)="deleteHeader(product.get('headers'), j)" class="btn btn-danger">Remove Header</button>
-                </div>
-                <button class="btn btn-danger" (click)="deleteProduct(i)">Delete Product</button>
-            </div>
-        </form>
-
-        <!--<form [formGroup]="form">
             <div class="form-row">
                 <div class="form-group col-md-4">
                     <label for="server">Server:</label>
@@ -59,43 +31,65 @@
                     <input type="text" class="form-control" formControlName="pat_username"  placeholder="devopsMetrics">
                 </div>
             </div>
-
-            <button class="btn btn-green" (click)="addProduct()">Add Product</button>
+            <!-- Products -->
             <div formArrayName="products">
-                <div *ngFor="let product of productsForm.controls; let i = index">
+                <div class="border border-dark rounded my-2 px-2 py-2" *ngFor="let product of productsForm.controls; let i = index">
                     <h2 class="mt-2">Product {{i + 1}}</h2>
                     <div class="form-row" [formGroupName]="i">
                         <div class="form-group col-md-3">
                             <label>SVG Product Name:</label>
                             <input class="form-control" formControlName="svg_product_name">
                         </div>
-                        <div class="form-group col-md-3">
-                            <label>Number of Days Displayed</label>
-                            <input class="form-control" formControlName="numDays">
-                        </div>
 
-                        <div formArrayName="headers">
-                            <div *ngFor="let header of product.get('headers').controls; let j = index">
-                                <div>
-                                    <label>Header Name:</label>
-                                    <input class="form-control" formControlName="j"/><button class="btn btn-danger" (click)="deleteHeader(product.get('headers'), j)">Delete Header</button>
+                        <div class="form-group col-md-3" formArrayName="headers">
+                            <label>Headers</label>
+                            <div *ngFor="let header of product.get('headers')['controls']; let j = index">
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control" [formControlName]="j">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-danger" (click)="deleteHeader(product.get('headers'), j)">x</button>
+                                    </div>
                                 </div>
                             </div>
                             <button class="btn btn-green" (click)="addHeader(product.get('headers'))">Add Header</button>
                         </div>
+                        
+                        <div class="form-group col-md-3">
+                            <label>Number of Days Displayed</label>
+                            <input class="form-control" formControlName="numDays">
+                        </div>
+                        
+                        <div class="col-md-3">
+                            <div formArrayName="projects">
+                                <div *ngFor="let project of product.get('projects')['controls']; let j = index">
+                                    <div class="form-row" [formGroupName]="j">
+                                        <label>Project {{j + 1}} Name:</label>
+                                        <div class="input-group mb-3">
+                                            <input class="form-control" formControlName="project_name"/>
+                                            <div class="input-group-append">
+                                                <button class="btn btn-danger" (click)="deleteProject(product.get('projects'), j)">x</button>
+                                            </div>
+                                        </div>
+                                    </div>                         
+                                </div>
+                            </div>
+                            <button class="btn btn-green" (click)="addProject(product.get('projects'))">Add Project</button>
+                        </div>
+
                     </div>
                     <button class="btn btn-danger mt-2"(click)="deleteProduct(i)">Delete Product</button>
+
                 </div>
             </div>
+            
+            <button class="btn btn-green mt-2" (click)="addProduct()">Add Product</button>
         </form>
--->
+
         <div class="json-results mt-3">
             <pre>{{this.form.value | json}}</pre>
-            <pre>{{this.form2.value | json}}</pre>
         </div>
     </div>
 </body>
-
 
 <!--
     <div class="mt-5 mx-5">

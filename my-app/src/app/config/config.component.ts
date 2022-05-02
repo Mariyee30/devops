@@ -12,75 +12,6 @@ export class ConfigComponent implements OnInit {
   ngOnInit() : void {}
 
   form : FormGroup;
-  form2 : FormGroup;
-
-  constructor(private fb : FormBuilder){
-    this.form = this.fb.group({
-      user: '',
-      directory: '',
-      filename: new FormArray([new FormControl('test')])
-    });
-
-    this.form2 = this.fb.group({
-      products: this.fb.array([])
-    });
-  }
-
-  products = this.fb.group({
-    headers: this.fb.array([new FormControl('test')]),
-  })
-
-  get productsForm() : FormArray {
-    return this.form2.get('products') as FormArray;
-  }
-
-  setProducts() {
-    this.data.products.forEach(x => {
-      this.productsForm.push(
-        this.fb.group({
-          headers: this.fb.array([new FormControl('test')]),
-        })
-      );
-    })
-  }
-
-  addProduct() {
-    this.productsForm.push(
-      this.fb.group({
-        headers: this.fb.array([new FormControl('test')]),
-      })
-    );
-  }
-
-  deleteProduct(index) {
-    this.productsForm.removeAt(index);
-  }
-
-  addHeader(control){
-    const form2 = new FormControl('');
-    control.push(
-      (<FormArray>this.form2.controls['headers']).push(form2)
-    )
-  }
-  addNewHeader(control) {
-    control.push(
-      this.fb.control('')
-    )
-  }
-
-  deleteHeader(control, index) {
-    control.removeAt(index);
-  }
-
-  addFormInput(){
-    const form=new FormControl('');
-    (<FormArray>this.form.controls['filename']).push(form);
-  }
-
-  removeFormInput(i){
-    (<FormArray>this.form.get('filename')).removeAt(i);
-  }
-  
 
   data = {
     server: '',
@@ -93,87 +24,135 @@ export class ConfigComponent implements OnInit {
           ""
         ],
         numDays: '',
-      }
-    ]
-  }
-
-  /*
-  ngOnInit() : void {}
-
-  configForm : FormGroup;
-
-  constructor(private fb : FormBuilder) {
-    this.configForm = this.fb.group({
-      server: ['', Validators.required],
-      organization: ['', Validators.required],
-      pat_username: ['', Validators.required],
-      products: this.fb.array([])
-    })
-  }
-
-  products = this.fb.group({
-    svg_product_name: [''],
-    headers: this.fb.array([]),
-    numDays: [''],
-    projects: this.fb.array([])
-  })
-
-  data = {
-    server: 'azure',
-    organization: 'organization',
-    pat_username: 'devopsMetrics',
-    //
-    products: [
-      {
-        svg_product_name: '',
-        headers: [
-          ""
-        ],
-        numDays: '',
-        //
         projects: [
           {
             project_name: '',
-            //
-            pipelines: {
-              build: [
-                {
-                  // buildName is defined by the user
-                  buildName: {
-                    id: '',
-                    stages: [
-                      {
-                        name: '',
-                        alias: ''
-                      }
-                    ]
-                  }
-                }
-              ],
-              release: [
-                {
-                  releaseName: {
-                    id: '',
-                    stages: [
-                      {
-                        name: '',
-                        alias: ''
-                      }
-                    ]
-                  }
-                }
-              ]
-            }
+            pipelines: ({})
           }
         ]
       }
     ]
   }
 
-  get productsFormArray() : FormArray {
-    return this.configForm.get('products') as FormArray;
+  constructor(private fb : FormBuilder){
+    this.form = this.fb.group({
+      server: '',
+      organization: '',
+      pat_username: '',
+      products: this.fb.array([])
+    });
   }
 
+  // PRODUCTS
+  products = this.fb.group({
+    svg_product_name: '',
+    headers: this.fb.array([new FormControl('test')]),
+    numDays: '',
+    projects: this.fb.array([])
+  })
+
+  get productsForm() : FormArray {
+    return this.form.get('products') as FormArray;
+  }
+
+  setProducts() {
+    this.data.products.forEach(x => {
+      this.productsForm.push(
+        this.fb.group({
+          svg_product_name: x.svg_product_name,
+          headers: this.fb.array([new FormControl('test')]),
+          numDays: x.numDays,
+          projects: this.setProjects(x)
+        })
+      );
+    })
+  }
+
+  addProduct() {
+    this.productsForm.push(
+      this.fb.group({
+        svg_product_name: [''],
+        headers: this.fb.array([new FormControl('test')]),
+        numDays: [''],
+        projects: this.fb.array([]),
+      })
+    );
+  }
+
+  deleteProduct(index) {
+    this.productsForm.removeAt(index);
+  }
+
+  // HEADERS
+  get headersForm() : FormArray {
+    return this.products.get('headers') as FormArray;
+  }
+
+  addHeader(control) {
+    const form = new FormControl('');
+    control.push(form);
+  }
+
+  deleteHeader(control, index) {
+    control.removeAt(index);
+  }
+
+  // PROJECTS
+  get projectsForm() : FormArray {
+    return this.products.get('projects') as FormArray;
+  }
+
+  projects = this.fb.group({
+    project_name: '',
+    pipelines: this.fb.group({})
+  })
+
+  setProjects(x) {
+    let arr = new FormArray([]);
+    x.projects.forEach(y => {
+      arr.push(
+        this.fb.group({
+          project_name: y.project_name,
+          pipelines: this.fb.group({})
+        })
+      );
+    })
+    return arr;
+  }
+
+  addProject(control) {
+    control.push(
+      this.fb.group({
+        project_name: [''],
+        pipelines: this.fb.group({})
+      })
+    )
+  }
+
+  deleteProject(control, index) {
+    control.removeAt(index);
+  }
+
+  // PIPELINES
+  get pipelinesForm() : FormGroup {
+    return this.projects.get('pipelines') as FormGroup;
+  }
+
+  pipelines = this.fb.group({
+    build: this.fb.array([]),
+    release: this.fb.array([])
+  })
+
+  setPipelines(x) {
+    x.projects.forEach(y => {
+      this.fb.group({
+        build: this.fb.array([]),
+        release: this.fb.array([])
+      })
+    })
+  }
+
+  /*
   setProducts() {
     this.data.products.forEach(x => {
       this.productsFormArray.push(
