@@ -33,12 +33,12 @@
             </div>
             <!-- Products -->
             <div formArrayName="products">
-                <div *ngFor="let product of productsForm.controls; let i = index" class="border border-dark rounded my-2 px-2 py-2">
-                    <h2 class="mt-2">Product {{i + 1}}</h2>
+                <div *ngFor="let product of productsForm.controls; let i = index" class="border border-dark rounded px-2 py-2 mx-2 mt-1">
+                    <h2>Product {{i + 1}}</h2>
                     <div class="form-row" [formGroupName]="i">
                         <div class="form-group col-md-4">
                             <label>SVG Product Name:</label>
-                            <input class="form-control" formControlName="svg_product_name">
+                            <input class="form-control" formControlName="svg_product_name" placeholder="svg product name">
                         </div>
 
                         <div class="form-group col-md-4" formArrayName="headers">
@@ -56,70 +56,81 @@
                         
                         <div class="form-group col-md-4">
                             <label>Number of Days Displayed</label>
-                            <input class="form-control" formControlName="numDays">
+                            <input class="form-control" formControlName="numDays" placeholder="number of days">
+                            <small>Number of days displayed on the SVG.</small>
                         </div>
                         
                         <!-- Projects -->
-                        <div class="col-md-4">
+                        <div class="form-group col-md-12">
                             <div formArrayName="projects">
                                 <div *ngFor="let project of product.get('projects')['controls']; let j = index">
-                                    <div [formGroupName]="j">
-                                        <label>Project {{j + 1}} Name:</label>
+                                    <div class="border border-dark rounded px-2 py-2 mx-2 my-2" [formGroupName]="j">
+                                        <h2>Project {{j + 1}}:</h2>
+                                        <label>Project Name:</label>
                                         <div class="input-group mb-3">
                                             <input class="form-control" formControlName="project_name"/>
                                             <div class="input-group-append">
-                                                <button class="btn btn-danger" (click)="deleteProject(product.get('projects'), j)">x</button>
+                                                <button class="btn btn-danger" (click)="deleteProject(product.get('projects'), j)">Delete Project</button>
                                             </div>
                                         </div>
+
                                         <!-- Pipelines -->
                                         <div formArrayName="pipelines">
                                             <div *ngFor="let pipeline of project.get('pipelines')['controls']; let k = index">
-                                                <div [formGroupName]="k">
-                                                    
-                                                    <button class="btn btn-danger" (click)="deletePipeline(project.get('pipelines'))">Delete Pipeline</button>
-
+                                                <div class="border border-dark rounded px-2 py-2 mx-2 my-2" [formGroupName]="k">
+                                                    <h2>Pipeline {{k + 1}}:</h2>
+                                                    <small>Please define your builds and releases within this pipeline.</small>
                                                     <!-- Builds -->
                                                     <div formArrayName="build">
                                                         <div *ngFor="let build of pipeline.get('build')['controls']; let l = index">
-                                                            <div [formGroupName]="l">
-                                                                <h3>Build {{l + 1}}:</h3>
+                                                            <div class="border border-dark rounded px-2 py-2 mx-2 my-2" [formGroupName]="l">
+                                                                <h2>Build {{l + 1}}:</h2>
 
                                                                 <!-- User defined build -->
+                                                                <h2>User defined build</h2>
                                                                 <div formArrayName="buildUserDefined">
                                                                     <div *ngFor="let buildUser of build.get('buildUserDefined')['controls']; let m = index">
                                                                         <div [formGroupName]="m">
-                                                                            <label>ID:</label>
-                                                                            <input class="form-control" formControlName="id">
+                                                                            <label>Build ID:</label>
+                                                                            <div class="input-group">
+                                                                                <input class="form-control" formControlName="id" placeholder="build id">
+                                                                                <div class="input-group-append">
+                                                                                    <button class="btn btn-danger float-right" (click)="deleteBuild(pipeline.get('build'), k)">Delete Build</button>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
 
                                                                         <!-- Build Stages -->
                                                                         <div formArrayName="stages">
                                                                             <div *ngFor="let stage of buildUser.get('stages')['controls']; let n = index">
-                                                                                <div [formGroupName]="n">
-                                                                                    <label>Name:</label>
-                                                                                    <input class="form-control" formControlName="name">
+                                                                                <div class="border border-dark rounded px-2 py-2 mx-2 my-2" [formGroupName]="n">
+                                                                                    <div>
+                                                                                        <label>Stage Name:</label>
+                                                                                        <div class="input-group">
+                                                                                            <input class="form-control" formControlName="name" placeholder="stage name">             
+                                                                                            <div class="input-group-append">
+                                                                                                <button class="btn btn-danger float-right" (click)="deleteStage(buildUser.get('stages'))">Delete Stage</button>
+                                                                                            </div>
+                                                                                        </div>
 
-                                                                                    <label>Alias:</label>
-                                                                                    <input class="form-control" formControlName="alias">
+                                                                                        <label>Alias:</label>
+                                                                                        <input class="form-control" formControlName="alias" placeholder="alias">
+
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                        <button class="btn btn-green" (click)="addStage(buildUser.get('stages'))">Add Stage</button>
-        
-
+                                                                        <button class="btn btn-green mt-1" (click)="addStage(buildUser.get('stages'))">Add Stage</button>
                                                                     </div>
-                                                                </div>
-                                                                <button class="btn btn-green" (click)="addBuildUser(build.get('buildUserDefined'))">Add User Defined Build</button>
-
+                                                                </div>                 
                                                             </div>
-                                                            <button class="btn btn-danger" (click)="deleteBuild(pipeline.get('build'), k)">x</button>                   
                                                         </div>
                                                     </div>
                                                     <button class="btn btn-green" (click)="addBuild(pipeline.get('build'))">Add Build</button>
 
-                                                    <!-- Releases -->
+                                                    <button class="btn btn-danger float-right" (click)="deletePipeline(project.get('pipelines'))">Delete Pipeline</button>
 
-                                                </div>                         
+                                                </div> 
                                             </div>
                                         </div>
                                         <button class="btn btn-green" (click)="addPipeline(project.get('pipelines'))">Add Pipeline</button>
@@ -127,11 +138,10 @@
                                 </div>
                             </div>
                             <button class="btn btn-green" (click)="addProject(product.get('projects'))">Add Project</button>
-                        </div>
 
+                            <button class="btn btn-danger float-right"(click)="deleteProduct(i)">Delete Product</button>
+                        </div>           
                     </div>
-                    <button class="btn btn-danger mt-2"(click)="deleteProduct(i)">Delete Product</button>
-
                 </div>
             </div>
             
@@ -143,3 +153,26 @@
         </div>
     </div>
 </body>
+                                                    <!-- Releases
+                                                    <div formArrayName="release">
+                                                        <div *ngFor="let release of pipeline.get('release')['controls']; let l = index">
+                                                            <div [formGroupName]="l">
+                                                                <h3>Release {{l + 1}}:</h3>
+
+                                                                <!-- User defined release
+                                                                <div formArrayName="releaseUserDefined">
+                                                                    <div *ngFor="let releaseUser of release.get('releaseUserDefined')['controls']; let m = index">
+                                                                        <div [formGroupName]="m">
+                                                                            <label>ID:</label>
+                                                                            <input class="form-control" formControlName="id">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <button class="btn btn-green" (click)="addReleaseUser(release.get('releaseUserDefined'))">Add User Defined Release</button>
+
+                                                            </div>
+                                                            <button class="btn btn-danger" (click)="deleteRelease(pipeline.get('release'), l)">x</button>  
+                                                        </div>
+                                                    </div>
+                                                    <button class="btn btn-green" (click)="addRelease(pipeline.get('release'))">Add Release</button>
+                                                -->

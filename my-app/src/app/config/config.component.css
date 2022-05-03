@@ -1,5 +1,6 @@
 body {
-    background: #f3f5f5;
+    background-color: #f3f5f5;
+    margin: 0;
 }
 ::-webkit-scrollbar {
     width: 2;  /* Remove scrollbar space */

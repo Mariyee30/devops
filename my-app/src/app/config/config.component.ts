@@ -171,7 +171,7 @@ export class ConfigComponent implements OnInit {
   }
 
   // BUILD
-  get userNamedForm() : FormArray {
+  get buildsForm() : FormArray {
     return this.pipelines.get('build') as FormArray;
   }
 
@@ -184,7 +184,8 @@ export class ConfigComponent implements OnInit {
     x.buildsForm.forEach(y => {
       arr.push(
         this.fb.group({
-          user: this.setBuildUser(x)
+          id: y.id,
+          stages: this.setStage(x)
         })
       );
     })
@@ -194,7 +195,12 @@ export class ConfigComponent implements OnInit {
   addBuild(control) {
     control.push(
       this.fb.group({
-        buildUserDefined: this.fb.array([])
+        buildUserDefined: this.fb.array([
+          this.fb.group({
+            id: [''],
+            stages: this.fb.array([])
+          }) 
+        ])
       })
     )
   }
@@ -274,4 +280,74 @@ export class ConfigComponent implements OnInit {
   deleteStage(control, index) {
     control.removeAt(index);
   }
+
+  // RELEASE
+  get releaseForm() : FormArray {
+    return this.pipelines.get('release') as FormArray;
+  }
+
+  releases = this.fb.group({
+    releaseUserDefined: this.fb.array([])
+  })
+
+  setRelease(x) {
+    let arr = new FormArray([]);
+    x.buildsForm.forEach(y => {
+      arr.push(
+        this.fb.group({
+          user: this.setReleaseUser(x)
+        })
+      );
+    })
+    return arr;
+  }
+
+  addRelease(control) {
+    control.push(
+      this.fb.group({
+        releaseUserDefined: this.fb.array([])
+      })
+    )
+  }
+
+  deleteRelease(control, index) {
+    control.removeAt(index);
+  }
+
+  // Release User Defined Form
+  get releaseUserDefinedForm() : FormArray {
+    return this.pipelines.get('release') as FormArray;
+  }
+
+  releaseUserDefined = this.fb.group({
+    id: [''],
+    stages: this.fb.array([])
+  })
+
+  setReleaseUser(x) {
+    let arr = new FormArray([]);
+    x.buildUserDefinedForm.forEach(y => {
+      arr.push(
+        this.fb.group({
+          id: y.id,
+          stages: this.setStage(x)
+        })
+      );
+    })
+    return arr;
+  }
+
+  addReleaseUser(control) {
+    control.push(
+      this.fb.group({
+        id: [''],
+        stages: this.fb.array([])
+      })
+    )
+  }
+
+  deleteReleaseUser(control, index) {
+    control.removeAt(index);
+  }
+
 }
