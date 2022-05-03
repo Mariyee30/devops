@@ -27,7 +27,12 @@ export class ConfigComponent implements OnInit {
         projects: [
           {
             project_name: '',
-            pipelines: ({})
+            pipelines: [
+              {
+                build: [],
+                release: [],
+              }
+            ]
           }
         ]
       }
@@ -44,6 +49,10 @@ export class ConfigComponent implements OnInit {
   }
 
   // PRODUCTS
+  get productsForm() : FormArray {
+    return this.form.get('products') as FormArray;
+  }
+
   products = this.fb.group({
     svg_product_name: '',
     headers: this.fb.array([new FormControl('test')]),
@@ -51,18 +60,14 @@ export class ConfigComponent implements OnInit {
     projects: this.fb.array([])
   })
 
-  get productsForm() : FormArray {
-    return this.form.get('products') as FormArray;
-  }
-
-  setProducts() {
+  setProduct() {
     this.data.products.forEach(x => {
       this.productsForm.push(
         this.fb.group({
           svg_product_name: x.svg_product_name,
           headers: this.fb.array([new FormControl('test')]),
           numDays: x.numDays,
-          projects: this.setProjects(x)
+          projects: this.setProject(x)
         })
       );
     })
@@ -84,10 +89,6 @@ export class ConfigComponent implements OnInit {
   }
 
   // HEADERS
-  get headersForm() : FormArray {
-    return this.products.get('headers') as FormArray;
-  }
-
   addHeader(control) {
     const form = new FormControl('');
     control.push(form);
@@ -104,16 +105,16 @@ export class ConfigComponent implements OnInit {
 
   projects = this.fb.group({
     project_name: '',
-    pipelines: this.fb.group({})
+    pipelines: this.fb.array([])
   })
 
-  setProjects(x) {
+  setProject(x) {
     let arr = new FormArray([]);
-    x.projects.forEach(y => {
+    x.projectsForm.forEach(y => {
       arr.push(
         this.fb.group({
           project_name: y.project_name,
-          pipelines: this.fb.group({})
+          pipelines: this.setPipeline(x)
         })
       );
     })
@@ -124,7 +125,7 @@ export class ConfigComponent implements OnInit {
     control.push(
       this.fb.group({
         project_name: [''],
-        pipelines: this.fb.group({})
+        pipelines: this.fb.array([])
       })
     )
   }
@@ -134,8 +135,8 @@ export class ConfigComponent implements OnInit {
   }
 
   // PIPELINES
-  get pipelinesForm() : FormGroup {
-    return this.projects.get('pipelines') as FormGroup;
+  get pipelinesForm() : FormArray {
+    return this.projects.get('pipelines') as FormArray;
   }
 
   pipelines = this.fb.group({
@@ -143,102 +144,24 @@ export class ConfigComponent implements OnInit {
     release: this.fb.array([])
   })
 
-  setPipelines(x) {
-    x.projects.forEach(y => {
+  setPipeline(x) {
+    let arr = new FormArray([]);
+    x.pipelinesForm.forEach(y => {
+      arr.push(
+        this.fb.group({
+          build: this.setBuild(x),
+          release: this.fb.array([])
+        })
+      );
+    })
+    return arr;
+  }
+
+  addPipeline(control) {
+    control.push(
       this.fb.group({
         build: this.fb.array([]),
         release: this.fb.array([])
-      })
-    })
-  }
-
-  /*
-  setProducts() {
-    this.data.products.forEach(x => {
-      this.productsFormArray.push(
-        this.fb.group({
-          svg_product_name: x.svg_product_name,
-          headers: this.setHeaders(x),
-          numDays: x.numDays,
-          projects: this.setProjects(x)
-        })
-      );
-    })
-  }
-
-  addNewProduct() {
-    this.productsFormArray.push(
-      this.fb.group({
-        svg_product_name: [''],
-        headers: [''],
-        numDays: [''],
-        projects: this.fb.array([])
-      })
-    );
-  }
-
-  deleteProduct(index) {
-    this.productsFormArray.removeAt(index);
-  }
-
-  setHeaders(x) {
-    let arr = new FormArray([]);
-    x.headers.forEach(y => {
-      arr.push(
-        this.fb.group({
-          header: y.header
-        })
-      );
-    })
-    return arr;
-  }
-
-  addNewHeader(control) {
-    control.push(
-      this.fb.control('')
-    )
-  }
-
-  deleteHeader(control, index) {
-    control.removeAt(index);
-  }
-
-  setProjects(x) {
-    let arr = new FormArray([]);
-    x.projects.forEach(y => {
-      arr.push(
-        this.fb.group({
-          project_name: y.project_name,
-          pipelines: this.setPipelines(x)
-        })
-      );
-    })
-    return arr;
-  }
-
-  addNewProject(control) {
-    control.push(
-      this.fb.group({
-        project_name: [''],
-        pipelines: this.fb.array([]),
-      })
-    )
-  }
-
-  deleteProject(control, index) {
-    control.removeAt(index);
-  }
-
-  setPipelines(x) {
-    x.projects.forEach(y => {
-      build: y.build;
-    })
-  }
-
-  addNewPipeline(control) {
-    control.push(
-      this.fb.group({
-        build: ['']
       })
     )
   }
@@ -247,8 +170,108 @@ export class ConfigComponent implements OnInit {
     control.removeAt(index);
   }
 
-  onSubmit() {
-    console.log(this.configForm.value);
+  // BUILD
+  get userNamedForm() : FormArray {
+    return this.pipelines.get('build') as FormArray;
   }
-*/
+
+  builds = this.fb.group({
+    buildUserDefined: this.fb.array([])
+  })
+
+  setBuild(x) {
+    let arr = new FormArray([]);
+    x.buildsForm.forEach(y => {
+      arr.push(
+        this.fb.group({
+          user: this.setBuildUser(x)
+        })
+      );
+    })
+    return arr;
+  }
+
+  addBuild(control) {
+    control.push(
+      this.fb.group({
+        buildUserDefined: this.fb.array([])
+      })
+    )
+  }
+
+  deleteBuild(control, index) {
+    control.removeAt(index);
+  }
+
+  // Build User Defined Form
+  get buildUserDefinedForm() : FormArray {
+    return this.pipelines.get('build') as FormArray;
+  }
+
+  buildUserDefined = this.fb.group({
+    id: [''],
+    stages: this.fb.array([])
+  })
+
+  setBuildUser(x) {
+    let arr = new FormArray([]);
+    x.buildUserDefinedForm.forEach(y => {
+      arr.push(
+        this.fb.group({
+          id: y.id,
+          stages: this.setStage(x)
+        })
+      );
+    })
+    return arr;
+  }
+
+  addBuildUser(control) {
+    control.push(
+      this.fb.group({
+        id: [''],
+        stages: this.fb.array([])
+      })
+    )
+  }
+
+  deleteBuildUser(control, index) {
+    control.removeAt(index);
+  }
+
+  // BUILD STAGES
+  get stagesForm() : FormArray {
+    return this.buildUserDefined.get('stages') as FormArray;
+  }
+
+  stages = this.fb.group({
+    id: [''],
+    stages: this.fb.array([])
+  })
+
+  setStage(x) {
+    let arr = new FormArray([]);
+    x.stagesForm.forEach(y => {
+      arr.push(
+        this.fb.group({
+          name: y.name,
+          alias: y.alias
+        })
+      );
+    })
+    return arr;
+  }
+
+  addStage(control) {
+    control.push(
+      this.fb.group({
+        name: [''],
+        alias: ['']
+      })
+    )
+  }
+
+  deleteStage(control, index) {
+    control.removeAt(index);
+  }
 }
