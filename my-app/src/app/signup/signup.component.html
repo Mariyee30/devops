@@ -9,7 +9,7 @@
             <a class="dropdown-item" routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
             <a class="dropdown-item" routerLink="/config" routerLinkActive="active">Config Editor Tool</a>
         </div>
-        <span class="toolbar-color">Login</span>
+        <span class="toolbar-color">Signup Page</span>
     </mat-toolbar-row>
 </mat-toolbar>
 
@@ -22,8 +22,8 @@
                     <div class="row">
                         <div class="col-lg-10 col-xl-6 mx-auto">
                             <img class="laptop center-block" src="https://brandeps.com/icon-download/L/Laptop-icon-vector-08.svg" alt='image'/>
-                            <h2 class="text-secondary center-block info-text">Sign In using your personal access tokens credentials.</h2>
-                            <h3 class="text-muted center-block info-text">This will take you straight to your configuration dashboard where you can access your configuration files.</h3>
+                            <h2 class="text-secondary center-block info-text">Welcome to our configuration editor application.</h2>
+                            <h3 class="text-muted center-block info-text">Please enter the credentials you wish to use for your account.</h3>
                         </div>
                     </div>
                 </div>
@@ -36,7 +36,7 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-10 col-xl-7 mx-auto">
-                            <h2 class="text-secondary display-4">Sign In</h2>
+                            <h2 class="text-secondary display-4">Sign Up</h2>
                             <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
                                 <div class="form-group mb-3">
                                     <input id="inputusername" type="username" formControlName="username"  [ngClass]="{ 'is-invalid': submitted && f.username.errors }" placeholder="Username" required="" autofocus="" class="form-control border-1 shadow-sm px-4">
@@ -53,7 +53,7 @@
                                      </div>
                                 </div>
                                 
-                                <button type="submit" class="btn btn-green btn-block mb-2 shadow-sm center-block">Sign In</button>
+                                <button type="submit" class="btn btn-green btn-block mb-2 shadow-sm center-block">Sign Up</button>
                             </form>
                         </div>
                     </div>
