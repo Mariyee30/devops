@@ -1,6 +1,5 @@
 body {
     background-color: #f3f5f5;
-    margin: 0;
 }
 ::-webkit-scrollbar {
     width: 2;  /* Remove scrollbar space */
@@ -26,7 +25,11 @@ body {
     color: #0da682;
 }
 
-.json-results {
-    border: 2px solid black;
-    padding: 2px;
+.border-green {
+    border-color: #0da682;
 }
+
+.row {
+    padding-right: 0px;
+    margin-right: 0px;
+  }

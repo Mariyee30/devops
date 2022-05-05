@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, FormArray, FormControl, Validators, AbstractControl } from '@angular/forms';
+import { Clipboard } from '@angular/cdk/clipboard';
 
 @Component({
   selector: 'config',
@@ -39,7 +40,7 @@ export class ConfigComponent implements OnInit {
     ]
   }
 
-  constructor(private fb : FormBuilder){
+  constructor(private fb : FormBuilder, private clipboard: Clipboard){
     this.form = this.fb.group({
       server: '',
       organization: '',
@@ -47,6 +48,14 @@ export class ConfigComponent implements OnInit {
       products: this.fb.array([])
     });
   }
+
+  public copy() {
+    // replace this object with your data
+    const object = this.form.value;
+
+    // Note the parameters
+    this.clipboard.copy(JSON.stringify(object, null, 2));
+}
 
   // PRODUCTS
   get productsForm() : FormArray {
@@ -184,8 +193,7 @@ export class ConfigComponent implements OnInit {
     x.buildsForm.forEach(y => {
       arr.push(
         this.fb.group({
-          id: y.id,
-          stages: this.setStage(x)
+          buildUserDefined: this.setBuildUser(x)
         })
       );
     })
@@ -225,7 +233,7 @@ export class ConfigComponent implements OnInit {
       arr.push(
         this.fb.group({
           id: y.id,
-          stages: this.setStage(x)
+          stages: this.setBuildStage(x)
         })
       );
     })
@@ -246,18 +254,18 @@ export class ConfigComponent implements OnInit {
   }
 
   // BUILD STAGES
-  get stagesForm() : FormArray {
+  get buildStagesForm() : FormArray {
     return this.buildUserDefined.get('stages') as FormArray;
   }
 
-  stages = this.fb.group({
+  buildStages = this.fb.group({
     id: [''],
     stages: this.fb.array([])
   })
 
-  setStage(x) {
+  setBuildStage(x) {
     let arr = new FormArray([]);
-    x.stagesForm.forEach(y => {
+    x.buildStagesForm.forEach(y => {
       arr.push(
         this.fb.group({
           name: y.name,
@@ -268,7 +276,7 @@ export class ConfigComponent implements OnInit {
     return arr;
   }
 
-  addStage(control) {
+  addBuildStage(control) {
     control.push(
       this.fb.group({
         name: [''],
@@ -277,12 +285,12 @@ export class ConfigComponent implements OnInit {
     )
   }
 
-  deleteStage(control, index) {
+  deleteBuildStage(control, index) {
     control.removeAt(index);
   }
 
   // RELEASE
-  get releaseForm() : FormArray {
+  get releasesForm() : FormArray {
     return this.pipelines.get('release') as FormArray;
   }
 
@@ -292,10 +300,10 @@ export class ConfigComponent implements OnInit {
 
   setRelease(x) {
     let arr = new FormArray([]);
-    x.buildsForm.forEach(y => {
+    x.releasesForm.forEach(y => {
       arr.push(
         this.fb.group({
-          user: this.setReleaseUser(x)
+          releaseUserDefined: this.setReleaseUser(x)
         })
       );
     })
@@ -305,7 +313,12 @@ export class ConfigComponent implements OnInit {
   addRelease(control) {
     control.push(
       this.fb.group({
-        releaseUserDefined: this.fb.array([])
+        releaseUserDefined: this.fb.array([
+          this.fb.group({
+            id: [''],
+            stages: this.fb.array([])
+          }) 
+        ])
       })
     )
   }
@@ -326,11 +339,11 @@ export class ConfigComponent implements OnInit {
 
   setReleaseUser(x) {
     let arr = new FormArray([]);
-    x.buildUserDefinedForm.forEach(y => {
+    x.releaseUserDefinedForm.forEach(y => {
       arr.push(
         this.fb.group({
           id: y.id,
-          stages: this.setStage(x)
+          stages: this.setReleaseStage(x)
         })
       );
     })
@@ -350,4 +363,40 @@ export class ConfigComponent implements OnInit {
     control.removeAt(index);
   }
 
+  // RELEASE STAGES
+  get releaseStagesForm() : FormArray {
+    return this.releaseUserDefined.get('stages') as FormArray;
+  }
+
+  releaseStages = this.fb.group({
+    id: [''],
+    stages: this.fb.array([])
+  })
+
+  setReleaseStage(x) {
+    let arr = new FormArray([]);
+    x.releaseStagesForm.forEach(y => {
+      arr.push(
+        this.fb.group({
+          name: y.name,
+          alias: y.alias
+        })
+      );
+    })
+    return arr;
+  }
+
+  addReleaseStage(control) {
+    control.push(
+      this.fb.group({
+        name: [''],
+        alias: ['']
+      })
+    )
+  }
+
+  deleteReleaseStage(control, index) {
+    control.removeAt(index);
+  }
+  
 }
