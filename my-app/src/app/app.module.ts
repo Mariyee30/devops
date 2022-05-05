@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -13,13 +13,19 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { LoginComponent } from './login/login.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ConfigComponent } from './config/config.component';
+import { MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { ClipboardModule } from '@angular/cdk/clipboard';
+import { SignupComponent } from './signup/signup.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     DashboardComponent,
-    ConfigComponent
+    ConfigComponent,
+    SignupComponent
   ],
   imports: [
     BrowserModule,
@@ -31,6 +37,10 @@ import { ConfigComponent } from './config/config.component';
     MatToolbarModule,
     MatIconModule,
     FontAwesomeModule,
+    MatSelectModule,
+    MatFormFieldModule,
+    MatInputModule,
+    ClipboardModule
   ],
   providers: [],
   bootstrap: [AppComponent]

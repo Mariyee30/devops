@@ -1,15 +1,5 @@
-
-.center-block {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.grey {
+background-grey {
     background-color: #f3f5f5;
-    height: 95vh;
-    overflow: scroll;
-    overflow-x: hidden;
 }
 ::-webkit-scrollbar {
     width: 2;  /* Remove scrollbar space */
@@ -35,37 +25,11 @@
     color: #0da682;
 }
 
-.search {
-    background-color: white;
-    border: none;
-    padding: 10px;
-    margin-top: 2px;
-    width: 12%;
-    font-style: normal;
+.border-green {
+    border-color: #0da682;
 }
 
-.float-right {
-    float: right;
-}
-
-.font-fix {
-    font-family: FontAwesome, Roboto;
-}
-
-.card-date {
-    position: flex;
-    bottom: 0;
-    color: grey;
-}
-
-.border-check {
-   background-color: black;
-}
-
-.file-input {
-    display: none;
-}
-
-.config-title {
-    border: 2px solid black;
-}
+.row {
+    padding-right: 0px;
+    margin-right: 0px;
+  }

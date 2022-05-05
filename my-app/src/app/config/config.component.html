@@ -1,128 +1,224 @@
-<mat-toolbar style="background-color:#051b2d;">
-    <mat-toolbar-row>
-        <button mat-icon-button class="example-icon toolbar-color" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <mat-icon>menu</mat-icon>
-          </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" routerLink="/login" routerLinkActive="active">Login</a>
-            <a class="dropdown-item" routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
-            <a class="dropdown-item" routerLink="/config" routerLinkActive="active">Config Editor Tool</a>
-        </div>
-        <span class="toolbar-color">Config Editor Tool</span>
-    </mat-toolbar-row>
-</mat-toolbar>
+<body>
+    <mat-toolbar style="background-color:#051b2d;">
+        <mat-toolbar-row>
+            <button mat-icon-button class="example-icon toolbar-color" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <mat-icon>menu</mat-icon>
+              </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" routerLink="/login" routerLinkActive="active">Login</a>
+                <a class="dropdown-item" routerLink="/signup" routerLinkActive="active">Signup</a>
+                <a class="dropdown-item" routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+                <a class="dropdown-item" routerLink="/config" routerLinkActive="active">Config Editor Tool</a>
+            </div>
+            <span class="toolbar-color">Login</span>
+        </mat-toolbar-row>
+    </mat-toolbar>
 
-<div class="grey">
-    <div class="row">
-        <!-- Configuration Editor -->
-        <div class="py-3">
-            <div id="accordion">
-                <div class="card mx-3">
-                    <div class="card-header" id="headingOne">
-                        <h5 class="mb-0">
-                            <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                Collapsible Group Item #1
-                            </button>
-                        </h5>
-                    </div>
-                
-                    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
-                        <div class="card-body">
-                            <input placeholder="Config">
+    <div class="container-fluid background-grey">
+        <div class="row">
+            <div class="col-md-8 ml-2 mt-3">
+                <!-- Editor -->
+                <!-- Server Info -->
+                <form [formGroup]="form">
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="server">Server:</label>
+                            <input type="text" class="form-control" formControlName="server"  placeholder="azure">
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="organization">Organization:</label>
+                            <input type="text" class="form-control" formControlName="organization"  placeholder="huntermob">
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="pat_username">PAT Username:</label>
+                            <input type="text" class="form-control" formControlName="pat_username"  placeholder="devopsMetrics">
                         </div>
                     </div>
-                </div>
-                <div class="card mx-3">
-                    <div class="card-header" id="headingTwo">
-                        <h5 class="mb-0">
-                            <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                Collapsible Group Item #2
-                            </button>
-                        </h5>
-                    </div>
-                    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
-                        <div class="card-body">
-                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon
-                            officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3
-                            wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et.
-                            Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan
-                            excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt
-                            you probably haven't heard of them accusamus labore sustainable VHS.
+                    <!-- Products -->
+                    <div formArrayName="products">
+                        <div *ngFor="let product of productsForm.controls; let i = index" class="border-bottom border-dark rounded px-2 py-2 mx-2 mt-1">
+                            <h2>Product {{i + 1}}</h2>
+                            <div class="form-row" [formGroupName]="i">
+                                <div class="form-group col-md-4">
+                                    <label>SVG Product Name:</label>
+                                    <input class="form-control" formControlName="svg_product_name" placeholder="svg product name">
+                                </div>
+
+                                <div class="form-group col-md-4" formArrayName="headers">
+                                    <label>Headers</label>
+                                    <div *ngFor="let header of product.get('headers')['controls']; let j = index">
+                                        <div class="input-group mb-3">
+                                            <input type="text" class="form-control" [formControlName]="j">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-danger" (click)="deleteHeader(product.get('headers'), j)">x</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-green" (click)="addHeader(product.get('headers'))">Add Header</button>
+                                </div>
+                                
+                                <div class="form-group col-md-4">
+                                    <label>Number of Days Displayed</label>
+                                    <input class="form-control" formControlName="numDays" placeholder="number of days">
+                                    <small>Number of days displayed on the SVG.</small>
+                                </div>
+                                
+                                <!-- Projects -->
+                                <div class="form-group col-md-12">
+                                    <div formArrayName="projects">
+                                        <div *ngFor="let project of product.get('projects')['controls']; let j = index">
+                                            <div class="border-top border-bottom border-dark rounded px-2 py-2 mx-2 my-2" [formGroupName]="j">
+                                                <h2>Project {{j + 1}}:</h2>
+                                                <label>Project Name:</label>
+                                                <div class="input-group mb-3">
+                                                    <input class="form-control" formControlName="project_name"/>
+                                                    <div class="input-group-append">
+                                                        <button class="btn btn-danger" (click)="deleteProject(product.get('projects'), j)">Delete Project</button>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Pipelines -->
+                                                <div formArrayName="pipelines">
+                                                    <div *ngFor="let pipeline of project.get('pipelines')['controls']; let k = index">
+                                                        <div class="border-top border-bottom border-dark rounded px-2 py-2 mx-2 my-2" [formGroupName]="k">
+                                                            <h2>Pipeline {{k + 1}}:</h2>
+                                                            <small>Please define your builds and releases within this pipeline.</small>
+
+                                                            <!-- Builds -->
+                                                            <div formArrayName="build">
+                                                                <div *ngFor="let build of pipeline.get('build')['controls']; let l = index">
+                                                                    <div class="border-top border-bottom border-dark rounded px-2 py-2 mx-2 my-2" [formGroupName]="l">
+                                                                        <h2>Build {{l + 1}}:</h2>
+
+                                                                        <!-- User Defined Build -->
+                                                                        <h2>User defined build</h2>
+                                                                        <p>Functionality for user defining build name not yet implemented.</p>
+                                                                        <div formArrayName="buildUserDefined">
+                                                                            <div *ngFor="let buildUser of build.get('buildUserDefined')['controls']; let m = index">
+                                                                                <div [formGroupName]="m">
+                                                                                    <label>Build ID:</label>
+                                                                                    <div class="input-group">
+                                                                                        <input class="form-control" formControlName="id" placeholder="build id">
+                                                                                        <div class="input-group-append">
+                                                                                            <button class="btn btn-danger float-right" (click)="deleteBuild(pipeline.get('build'), k)">Delete Build</button>
+                                                                                        </div>
+                                                                                    </div>
+
+                                                                                    <!-- Build Stages -->
+                                                                                    <div formArrayName="stages">
+                                                                                        <div *ngFor="let stage of buildUser.get('stages')['controls']; let n = index">
+                                                                                            <div class="border-top border-bottom border-dark rounded px-2 py-2 mx-2 my-2" [formGroupName]="n">
+                                                                                                <div>
+                                                                                                    <label>Stage {{n + 1}} Name:</label>
+                                                                                                    <div class="input-group">
+                                                                                                        <input class="form-control" formControlName="name" placeholder="stage name">             
+                                                                                                        <div class="input-group-append">
+                                                                                                            <button class="btn btn-danger float-right" (click)="deleteBuildStage(buildUser.get('stages'))">x</button>
+                                                                                                        </div>
+                                                                                                    </div>
+
+                                                                                                    <label>Alias:</label>
+                                                                                                    <input class="form-control" formControlName="alias" placeholder="alias">
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <button class="btn btn-green mt-1" (click)="addBuildStage(buildUser.get('stages'))">Add Build Stage</button>
+                                                                                    <!-- End of Build Stages -->
+
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <!-- End of User Defined Build -->
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <button class="btn btn-green" (click)="addBuild(pipeline.get('build'))">Add Build</button>
+                                                            <!-- End of Builds -->
+
+                                                            <!-- Releases -->
+                                                            <div formArrayName="release">
+                                                                <div *ngFor="let release of pipeline.get('release')['controls']; let l = index">
+                                                                    <div class="border-top border-bottom border-dark rounded px-2 py-2 mx-2 my-2" [formGroupName]="l">
+                                                                        <h2>Release {{l + 1}}:</h2>
+
+                                                                        <!-- User Defined Release -->
+                                                                        <h2>User defined release</h2>
+                                                                        <p>Functionality for user defining release name not yet implemented.</p>
+                                                                        <div formArrayName="releaseUserDefined">
+                                                                            <div *ngFor="let releaseUser of release.get('releaseUserDefined')['controls']; let m = index">
+                                                                                <div [formGroupName]="m">
+                                                                                    <label>Release ID:</label>
+                                                                                    <div class="input-group">
+                                                                                        <input class="form-control" formControlName="id" placeholder="release id">
+                                                                                        <div class="input-group-append">
+                                                                                            <button class="btn btn-danger float-right" (click)="deleteRelease(pipeline.get('release'), k)">Delete Release</button>
+                                                                                        </div>
+                                                                                    </div>
+
+                                                                                    <!-- Release Stages -->
+                                                                                    <div formArrayName="stages">
+                                                                                        <div *ngFor="let stage of releaseUser.get('stages')['controls']; let n = index">
+                                                                                            <div class="px-2 py-2 mx-2 my-2" [formGroupName]="n">
+                                                                                                <div>
+                                                                                                    <label>Stage {{n + 1}} Name:</label>
+                                                                                                    <div class="input-group">
+                                                                                                        <input class="form-control" formControlName="name" placeholder="stage name">             
+                                                                                                        <div class="input-group-append">
+                                                                                                            <button class="btn btn-danger float-right" (click)="deleteReleaseStage(releaseUser.get('stages'))">x</button>
+                                                                                                        </div>
+                                                                                                    </div>
+
+                                                                                                    <label class="mt-2">Alias:</label>
+                                                                                                    <input class="form-control" formControlName="alias" placeholder="alias">
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <button class="btn btn-green mt-1" (click)="addReleaseStage(releaseUser.get('stages'))">Add Release Stage</button>
+                                                                                    <!-- End of Release Stages -->
+
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <!-- End of User Defined Release -->      
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <button class="btn btn-green" (click)="addRelease(pipeline.get('release'))">Add Release</button>
+                                                            <!-- End of Releases -->
+
+                                                            <button class="btn btn-danger float-right" (click)="deletePipeline(project.get('pipelines'))">Delete Pipeline</button>
+                                                        </div> 
+                                                    </div>
+                                                </div>
+                                                <button class="btn btn-green" (click)="addPipeline(project.get('pipelines'))">Add Pipeline</button>
+                                                <!-- End of Pipelines -->
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-green" (click)="addProject(product.get('projects'))">Add Project</button>
+                                    <!-- End of Projects -->
+
+                                    <button class="btn btn-danger float-right"(click)="deleteProduct(i)">Delete Product</button>
+                                </div> 
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="card mx-3">
-                    <div class="card-header" id="headingThree">
-                        <h5 class="mb-0">
-                            <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                Collapsible Group Item #3
-                            </button>
-                        </h5>
-                    </div>
-                    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
-                        <div class="card-body">
-                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon
-                            officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3
-                            wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et.
-                            Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan
-                            excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt
-                            you probably haven't heard of them accusamus labore sustainable VHS.
-                        </div>
-                    </div>
-                </div>
+                    <button class="btn btn-green my-2" (click)="addProduct()">Add Product</button>
+                    <!-- End of Products -->
+
+                </form>
             </div>
 
-            <div class="container">
-                <div class="row">
-                    <div class="col-4">
-                        <div class="list-group" id="list-tab" role="tablist">
-                            <a class="list-group-item list-group-item-action active" id="list-home-list" data-toggle="list"
-                                href="#list-header" role="tab" aria-controls="home">Header</a>
-                            <a class="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list"
-                                href="#list-products" role="tab" aria-controls="profile">Products</a>
-                        </div>
-                    </div>
-                    <div class="col-8">
-                        <div class="tab-content" id="nav-tabContent">
-                            <div class="tab-pane fade show active" id="list-header" role="tabpanel" aria-labelledby="list-header-list">
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">Server</span>
-                                    </div>
-                                    <input type="text" class="form-control">
-                                </div>
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">Organization</span>
-                                    </div>
-                                    <input type="text" class="form-control">
-                                </div>
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">PAT Username</span>
-                                    </div>
-                                    <input type="text" class="form-control">
-                                </div>
-                            </div>
-                            <div class="tab-pane fade" id="list-products" role="tabpanel" aria-labelledby="list-products-list">
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">SVG Product Name</span>
-                                    </div>
-                                    <input type="text" class="form-control">
-                                </div>
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">Pipelines</span>
-                                    </div>
-                                    <input type="text" class="form-control">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            
+            <div class="col-md-3 mt-3 border-left">
+                <button class="btn btn-green mb-1" (click)="copy()"><i class="fa fa-clipboard"></i> Copy JSON</button>
+                <pre class="bg-light border border-dark px-2">{{this.form.value | json}}</pre>
             </div>
         </div>
     </div>
-</div>
-
+</body>
