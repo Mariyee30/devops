@@ -14,7 +14,7 @@
         </mat-toolbar-row>
     </mat-toolbar>
 
-    <div class="container-fluidm">
+    <div class="container-fluid background-grey">
         <div class="row">
             <div class="col-md-8 ml-2 mt-3">
                 <!-- Editor -->
@@ -92,6 +92,7 @@
 
                                                                         <!-- User Defined Build -->
                                                                         <h2>User defined build</h2>
+                                                                        <p>Functionality for user defining build name not yet implemented.</p>
                                                                         <div formArrayName="buildUserDefined">
                                                                             <div *ngFor="let buildUser of build.get('buildUserDefined')['controls']; let m = index">
                                                                                 <div [formGroupName]="m">
@@ -144,6 +145,7 @@
 
                                                                         <!-- User Defined Release -->
                                                                         <h2>User defined release</h2>
+                                                                        <p>Functionality for user defining release name not yet implemented.</p>
                                                                         <div formArrayName="releaseUserDefined">
                                                                             <div *ngFor="let releaseUser of release.get('releaseUserDefined')['controls']; let m = index">
                                                                                 <div [formGroupName]="m">
@@ -206,7 +208,7 @@
                             </div>
                         </div>
                     </div>
-                    <button class="btn btn-green mt-2" (click)="addProduct()">Add Product</button>
+                    <button class="btn btn-green my-2" (click)="addProduct()">Add Product</button>
                     <!-- End of Products -->
 
                 </form>

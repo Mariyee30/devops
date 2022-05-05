@@ -144,6 +144,8 @@ export class ConfigComponent implements OnInit {
   }
 
   // PIPELINES
+  // *TODO : Pipelines is supposed to only be a group of objects, could not get to work without implementing array.
+  // Reference working config.json in repo for format.
   get pipelinesForm() : FormArray {
     return this.projects.get('pipelines') as FormArray;
   }
@@ -218,6 +220,9 @@ export class ConfigComponent implements OnInit {
   }
 
   // Build User Defined Form
+  // *TODO : Build User Defined Form is supposed to only be a group of objects, could not get to work without implementing array.
+  // Reference working config.json in repo for format.
+  // User shoud also be able to rename this key to whatever they want.
   get buildUserDefinedForm() : FormArray {
     return this.pipelines.get('build') as FormArray;
   }
@@ -328,6 +333,9 @@ export class ConfigComponent implements OnInit {
   }
 
   // Release User Defined Form
+  // *TODO : Release User Defined Form is supposed to only be a group of objects, could not get to work without implementing array.
+  // Reference working config.json in repo for format.
+  // User shoud also be able to rename this key to whatever they want.
   get releaseUserDefinedForm() : FormArray {
     return this.pipelines.get('release') as FormArray;
   }
